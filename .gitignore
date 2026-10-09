@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+out/
+*.tsbuildinfo
+*.map
+
+# Packaged extensions
+*.vsix
+
+# VS Code test runner downloads
+.vscode-test/
+
+# Editor / IDE (keep shared launch + task configs)
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# Local AI-assistant settings
+.claude/
+CLAUDE.local.md
+
+# Internal planning notes
+docs/
+scratch/
+
+# Environment / secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Logs and coverage
+*.log
+npm-debug.log*
+coverage/
+.nyc_output/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini

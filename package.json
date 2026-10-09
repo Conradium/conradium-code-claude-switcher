@@ -1,0 +1,519 @@
+{
+  "name": "conradium-claude-code-switcher",
+  "displayName": "Conradium Code: Account Switcher for Claude",
+  "description": "Quickly switch between Claude accounts (subscriptions) in Claude Code, with live usage limits.",
+  "version": "0.4.0",
+  "publisher": "Conradium",
+  "author": {
+    "name": "Conradium"
+  },
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "claude",
+    "claude code",
+    "anthropic",
+    "account",
+    "switcher",
+    "usage",
+    "limits"
+  ],
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#133F45",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Conradium/conradium-code-claude-switcher"
+  },
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished",
+    "onWebviewPanel:claudeSwitcher.chat"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "claudeSwitcher",
+          "title": "Claude Accounts",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "claudeSwitcher": [
+        {
+          "id": "claudeSwitcher.accountsView",
+          "name": "Accounts",
+          "type": "webview"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "claudeSwitcher.addCurrentAccount",
+        "title": "Save current account as profile",
+        "category": "Claude",
+        "icon": "$(add)"
+      },
+      {
+        "command": "claudeSwitcher.addAccount",
+        "title": "Add another account (isolated login)",
+        "category": "Claude",
+        "icon": "$(person-add)"
+      },
+      {
+        "command": "claudeSwitcher.switchAccount",
+        "title": "Switch account",
+        "category": "Claude",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "claudeSwitcher.refreshUsage",
+        "title": "Refresh usage limits",
+        "category": "Claude",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "claudeSwitcher.sayHi",
+        "title": "Say Hi on account",
+        "category": "Claude",
+        "icon": "$(comment)"
+      },
+      {
+        "command": "claudeSwitcher.openClaudeTab",
+        "title": "Claude tab: Open for account",
+        "icon": {
+          "light": "media/claude-tab.svg",
+          "dark": "media/claude-tab.svg"
+        }
+      },
+      {
+        "command": "claudeSwitcher.showClaudeTab",
+        "title": "Show Claude Code tab for account",
+        "category": "Claude"
+      },
+      {
+        "command": "claudeSwitcher.openAccountTab1",
+        "title": "Claude tab: Open for the teal account",
+        "icon": {
+          "light": "media/tab-1.svg",
+          "dark": "media/tab-1.svg"
+        }
+      },
+      {
+        "command": "claudeSwitcher.openAccountTab2",
+        "title": "Claude tab: Open for the orange account",
+        "icon": {
+          "light": "media/tab-2.svg",
+          "dark": "media/tab-2.svg"
+        }
+      },
+      {
+        "command": "claudeSwitcher.openAccountTab3",
+        "title": "Claude tab: Open for the violet account",
+        "icon": {
+          "light": "media/tab-3.svg",
+          "dark": "media/tab-3.svg"
+        }
+      },
+      {
+        "command": "claudeSwitcher.openAccountTab4",
+        "title": "Claude tab: Open for the blue account",
+        "icon": {
+          "light": "media/tab-4.svg",
+          "dark": "media/tab-4.svg"
+        }
+      },
+      {
+        "command": "claudeSwitcher.openAccountTab5",
+        "title": "Claude tab: Open for the pink account",
+        "icon": {
+          "light": "media/tab-5.svg",
+          "dark": "media/tab-5.svg"
+        }
+      },
+      {
+        "command": "claudeSwitcher.openIndependentWindow",
+        "title": "Open independent account window",
+        "category": "Claude",
+        "icon": "$(window)"
+      },
+      {
+        "command": "claudeSwitcher.login",
+        "title": "Log in from terminal (replaces the current account)",
+        "category": "Claude",
+        "icon": "$(sign-in)"
+      },
+      {
+        "command": "claudeSwitcher.browserLogin",
+        "title": "Authorize in browser (without CLI)",
+        "category": "Claude",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "claudeSwitcher.reauthorizeProfile",
+        "title": "Reauthorize account profile",
+        "category": "Claude",
+        "icon": "$(sign-in)"
+      },
+      {
+        "command": "claudeSwitcher.completeProfileReauthorization",
+        "title": "Complete profile reauthorization",
+        "category": "Claude",
+        "icon": "$(pass)"
+      },
+      {
+        "command": "claudeSwitcher.removeAccount",
+        "title": "Remove account profile",
+        "category": "Claude"
+      },
+      {
+        "command": "claudeSwitcher.renameAccount",
+        "title": "Rename account profile",
+        "category": "Claude"
+      },
+      {
+        "command": "claudeSwitcher.undoSwitch",
+        "title": "Undo last switch",
+        "category": "Claude"
+      },
+      {
+        "command": "claudeSwitcher.openPanel",
+        "title": "Show accounts panel",
+        "category": "Claude"
+      },
+      {
+        "command": "claudeSwitcher.openWalkthrough",
+        "title": "Getting started",
+        "category": "Claude",
+        "icon": "$(book)"
+      },
+      {
+        "command": "claudeSwitcher.openSettings",
+        "title": "Settings",
+        "category": "Claude",
+        "icon": "$(gear)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "claudeSwitcher.openClaudeTab",
+          "when": "config.claudeSwitcher.showEditorTitleButton && !claudeSwitcher.anyAccountTabButton",
+          "group": "navigation"
+        },
+        {
+          "command": "claudeSwitcher.openAccountTab1",
+          "when": "config.claudeSwitcher.showEditorTitleButton && claudeSwitcher.accountTabButton1",
+          "group": "navigation"
+        },
+        {
+          "command": "claudeSwitcher.openAccountTab2",
+          "when": "config.claudeSwitcher.showEditorTitleButton && claudeSwitcher.accountTabButton2",
+          "group": "navigation"
+        },
+        {
+          "command": "claudeSwitcher.openAccountTab3",
+          "when": "config.claudeSwitcher.showEditorTitleButton && claudeSwitcher.accountTabButton3",
+          "group": "navigation"
+        },
+        {
+          "command": "claudeSwitcher.openAccountTab4",
+          "when": "config.claudeSwitcher.showEditorTitleButton && claudeSwitcher.accountTabButton4",
+          "group": "navigation"
+        },
+        {
+          "command": "claudeSwitcher.openAccountTab5",
+          "when": "config.claudeSwitcher.showEditorTitleButton && claudeSwitcher.accountTabButton5",
+          "group": "navigation"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "claudeSwitcher.refreshUsage",
+          "when": "view == claudeSwitcher.accountsView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "claudeSwitcher.addAccount",
+          "when": "view == claudeSwitcher.accountsView",
+          "group": "1_add@1"
+        },
+        {
+          "command": "claudeSwitcher.addCurrentAccount",
+          "when": "view == claudeSwitcher.accountsView",
+          "group": "1_add@2"
+        },
+        {
+          "command": "claudeSwitcher.browserLogin",
+          "when": "view == claudeSwitcher.accountsView",
+          "group": "2_login@1"
+        },
+        {
+          "command": "claudeSwitcher.login",
+          "when": "view == claudeSwitcher.accountsView",
+          "group": "2_login@2"
+        },
+        {
+          "command": "claudeSwitcher.sayHi",
+          "when": "view == claudeSwitcher.accountsView",
+          "group": "3_tools@1"
+        },
+        {
+          "command": "claudeSwitcher.openClaudeTab",
+          "when": "view == claudeSwitcher.accountsView",
+          "group": "3_tools@2"
+        },
+        {
+          "command": "claudeSwitcher.openIndependentWindow",
+          "when": "view == claudeSwitcher.accountsView",
+          "group": "3_tools@3"
+        },
+        {
+          "command": "claudeSwitcher.reauthorizeProfile",
+          "when": "view == claudeSwitcher.accountsView",
+          "group": "3_tools@4"
+        },
+        {
+          "command": "claudeSwitcher.undoSwitch",
+          "when": "view == claudeSwitcher.accountsView",
+          "group": "3_tools@5"
+        },
+        {
+          "command": "claudeSwitcher.openSettings",
+          "when": "view == claudeSwitcher.accountsView",
+          "group": "4_help@1"
+        },
+        {
+          "command": "claudeSwitcher.openWalkthrough",
+          "when": "view == claudeSwitcher.accountsView",
+          "group": "4_help@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "claudeSwitcher.openAccountTab1",
+          "when": "claudeSwitcher.accountTabButton1"
+        },
+        {
+          "command": "claudeSwitcher.openAccountTab2",
+          "when": "claudeSwitcher.accountTabButton2"
+        },
+        {
+          "command": "claudeSwitcher.openAccountTab3",
+          "when": "claudeSwitcher.accountTabButton3"
+        },
+        {
+          "command": "claudeSwitcher.openAccountTab4",
+          "when": "claudeSwitcher.accountTabButton4"
+        },
+        {
+          "command": "claudeSwitcher.openAccountTab5",
+          "when": "claudeSwitcher.accountTabButton5"
+        },
+        {
+          "command": "claudeSwitcher.removeAccount"
+        },
+        {
+          "command": "claudeSwitcher.renameAccount"
+        },
+        {
+          "command": "claudeSwitcher.showClaudeTab",
+          "when": "false"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Conradium Code: Claude Account Switcher",
+      "properties": {
+        "claudeSwitcher.pollIntervalSeconds": {
+          "type": "number",
+          "default": 240,
+          "minimum": 180,
+          "markdownDescription": "How often (in seconds) to automatically refresh usage limits for each account. The endpoint is heavily rate-limited — values below 180s are raised to 180s."
+        },
+        "claudeSwitcher.autoReloadAfterSwitch": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Automatically reload the VS Code window after switching accounts (required for Claude Code to pick up the new account). When disabled, the extension asks first."
+        },
+        "claudeSwitcher.credentialsPath": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Path to the Claude Code `.credentials.json` file. Empty = default `~/.claude/.credentials.json`."
+        },
+        "claudeSwitcher.warnThresholdPercent": {
+          "type": "number",
+          "default": 80,
+          "minimum": 1,
+          "maximum": 100,
+          "markdownDescription": "Usage threshold (%) above which the limit bar turns red and, with `#claudeSwitcher.usageAlerts#` on, a notification warns you."
+        },
+        "claudeSwitcher.usageAlerts": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Notify when an account in use in this window (Claude Code's, or one with an open Claude tab) passes `#claudeSwitcher.warnThresholdPercent#` of a usage limit, and again when it reaches the limit. Each notification shows once per limit window and offers the saved account with the most room left."
+        },
+        "claudeSwitcher.claudeCommand": {
+          "type": "string",
+          "default": "claude",
+          "markdownDescription": "Claude Code CLI command used for login and Say Hi warmups. Use the full path to `claude.cmd`/`claude.exe` if VS Code cannot find `claude` in PATH."
+        },
+        "claudeSwitcher.sayHiModel": {
+          "type": "string",
+          "default": "haiku",
+          "markdownDescription": "Model passed to `claude -p` for Say Hi warmups. `haiku` is the low-cost/default warmup choice."
+        },
+        "claudeSwitcher.sayHiPrompt": {
+          "type": "string",
+          "default": "Hi",
+          "markdownDescription": "Prompt used by Say Hi warmups."
+        },
+        "claudeSwitcher.showEditorTitleButton": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Show buttons in the editor title bar, next to Claude Code's own, that open Claude tabs for your saved accounts: one button per account in that account's color (up to five). Turn a single account's button off from its `⋯` menu in the Accounts panel."
+        },
+        "claudeSwitcher.chat.lockEditorGroup": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Open Claude tabs in their own editor group and lock it, so files open in another group. Claude tabs are restored with their conversations when VS Code restarts either way."
+        },
+        "claudeSwitcher.chat.checkpoints": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Let Claude tabs keep file checkpoints, so each prompt that led to edits gets a **Restore checkpoint** button that puts the files back the way they were. Applies to Claude tabs started after the change."
+        },
+        "claudeSwitcher.sayHiTimeoutSeconds": {
+          "type": "number",
+          "default": 120,
+          "minimum": 15,
+          "markdownDescription": "Maximum time to wait for a Say Hi warmup command."
+        }
+      }
+    },
+    "walkthroughs": [
+      {
+        "id": "gettingStarted",
+        "title": "Get started with Conradium Code",
+        "description": "Save your Claude accounts, keep an eye on their usage limits and switch between them in one click.",
+        "steps": [
+          {
+            "id": "openPanel",
+            "title": "Open the Accounts panel",
+            "description": "Everything lives in the **Claude Accounts** view in the activity bar: your saved accounts, their live usage limits and every action.\n[Open Accounts panel](command:claudeSwitcher.openPanel)",
+            "media": {
+              "image": {
+                "dark": "media/walkthrough/empty-dark.png",
+                "light": "media/walkthrough/empty-light.png",
+                "hc": "media/walkthrough/empty-dark.png",
+                "hcLight": "media/walkthrough/empty-light.png"
+              },
+              "altText": "The Claude Accounts panel before any account is saved"
+            },
+            "completionEvents": [
+              "onView:claudeSwitcher.accountsView"
+            ]
+          },
+          {
+            "id": "saveCurrent",
+            "title": "Save the account you are signed in with",
+            "description": "Store the login Claude Code is using right now as a profile. The panel also offers this whenever it spots an unsaved login.\n**Never use /logout to change accounts** — it revokes that login on Anthropic's side.\n[Save current login](command:claudeSwitcher.addCurrentAccount)",
+            "media": {
+              "image": {
+                "dark": "media/walkthrough/save-dark.png",
+                "light": "media/walkthrough/save-light.png",
+                "hc": "media/walkthrough/save-dark.png",
+                "hcLight": "media/walkthrough/save-light.png"
+              },
+              "altText": "The panel offering to save the login Claude Code is using"
+            },
+            "completionEvents": [
+              "onCommand:claudeSwitcher.addCurrentAccount"
+            ]
+          },
+          {
+            "id": "addAnother",
+            "title": "Add another account",
+            "description": "Sign in to a second account in an isolated login — your current account stays active and untouched. The **+ Add account** button at the bottom of the panel also has browser and terminal sign-in.\n[Log in to another account](command:claudeSwitcher.addAccount)",
+            "media": {
+              "image": {
+                "dark": "media/walkthrough/add-dark.png",
+                "light": "media/walkthrough/add-light.png",
+                "hc": "media/walkthrough/add-dark.png",
+                "hcLight": "media/walkthrough/add-light.png"
+              },
+              "altText": "The Add account dropdown with its four sign-in options"
+            },
+            "completionEvents": [
+              "onCommand:claudeSwitcher.addAccount"
+            ]
+          },
+          {
+            "id": "switch",
+            "title": "Switch in one click",
+            "description": "Choose **Use in Claude Code** in a card's **⋯** menu, or click the account in the status bar. Claude Code picks up the new account after a window reload (turn on **Auto Reload After Switch** to skip the prompt).\n[Switch account](command:claudeSwitcher.switchAccount)",
+            "media": {
+              "image": {
+                "dark": "media/walkthrough/accounts-dark.png",
+                "light": "media/walkthrough/accounts-light.png",
+                "hc": "media/walkthrough/accounts-dark.png",
+                "hcLight": "media/walkthrough/accounts-light.png"
+              },
+              "altText": "Saved accounts with usage bars and Switch buttons"
+            },
+            "completionEvents": [
+              "onCommand:claudeSwitcher.switchAccount"
+            ]
+          },
+          {
+            "id": "moreActions",
+            "title": "Run accounts side by side, warm up, tidy up",
+            "description": "**Open tab** on a card, or that account's colored button in the editor title bar, opens a Claude Code chat tab for it in this window, which is much lighter than a second VS Code window. Each card's **⋯** menu has the rest: refresh usage, **Say Hi** to start an inactive account's usage window without switching, reauthorize, turn its title bar button on or off, change its color, rename or remove.\n[Open Claude Code tab](command:claudeSwitcher.openClaudeTab)",
+            "media": {
+              "image": {
+                "dark": "media/walkthrough/menu-dark.png",
+                "light": "media/walkthrough/menu-light.png",
+                "hc": "media/walkthrough/menu-dark.png",
+                "hcLight": "media/walkthrough/menu-light.png"
+              },
+              "altText": "The account menu with Open in Claude tab, Open in new window, Refresh, Say Hi, Reauthorize, Rename and Remove"
+            }
+          },
+          {
+            "id": "settings",
+            "title": "Make it yours",
+            "description": "Set how often usage refreshes, when the bars turn red, the Say Hi model and prompt, and whether the window reloads by itself after a switch.\n[Open settings](command:workbench.action.openSettings?%5B%22%40ext%3AConradium.conradium-claude-code-switcher%22%5D)",
+            "media": {
+              "markdown": "media/walkthrough/settings.md"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "node esbuild.js",
+    "watch": "node esbuild.js --watch",
+    "package": "node esbuild.js --production",
+    "typecheck": "tsc --noEmit",
+    "test:smoke": "node test/run-smoke.cjs",
+    "build:vsix": "npm run package && vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.4.0"
+  }
+}

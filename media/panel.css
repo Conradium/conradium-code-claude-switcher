@@ -1,0 +1,536 @@
+:root {
+  color-scheme: light dark;
+  --border: var(--vscode-widget-border, var(--vscode-panel-border, rgba(128, 128, 128, 0.25)));
+  --muted: var(--vscode-descriptionForeground);
+  --radius: 6px;
+  --ok: var(--vscode-charts-green, #2ea043);
+  --warn: var(--vscode-charts-yellow, #d7a824);
+  --danger: var(--vscode-charts-red, #e5534b);
+  /* Brand: teal first, Claude orange second, as in media/icon.png. -ink is for text. */
+  --brand: #2b8a92;
+  --brand-hover: #247a81;
+  --brand-fg: #ffffff;
+  --brand-ink: #4fb7bf;
+  --brand-2: #d97757;
+}
+
+body.vscode-light,
+body.vscode-high-contrast-light {
+  --brand-ink: #1f6e75;
+}
+
+body.vscode-high-contrast {
+  --brand-ink: #5fd0d8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  color: var(--vscode-foreground);
+  background: transparent;
+  padding: 10px 12px 16px;
+  margin: 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* --- Icons --- */
+
+.icon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* --- Buttons --- */
+
+button {
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--vscode-button-border, transparent);
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  white-space: nowrap;
+}
+
+button:hover {
+  background: var(--vscode-button-secondaryHoverBackground);
+}
+
+button:focus-visible {
+  outline: 1px solid var(--vscode-focusBorder);
+  outline-offset: 1px;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+button.primary {
+  background: var(--brand);
+  color: var(--brand-fg);
+}
+
+button.primary:hover:not(:disabled) {
+  background: var(--brand-hover);
+}
+
+button.small {
+  padding: 2px 10px;
+}
+
+.icon-btn {
+  padding: 3px;
+  background: transparent;
+  color: var(--vscode-icon-foreground, var(--vscode-foreground));
+  border-color: transparent;
+}
+
+.icon-btn:hover,
+.icon-btn.open {
+  background: var(--vscode-toolbar-hoverBackground, rgba(128, 128, 128, 0.15));
+}
+
+button.link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin-top: 10px;
+  color: var(--vscode-textLink-foreground);
+}
+
+button.link:hover {
+  background: none;
+  text-decoration: underline;
+}
+
+/* --- Sections --- */
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 18px 2px 2px;
+}
+
+.section-title .mark {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.section-title .mark svg {
+  width: 14px;
+  height: 14px;
+}
+
+.section:first-child .section-title {
+  margin-top: 0;
+}
+
+.section-hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0 2px 8px;
+}
+
+/* An empty section, or Claude Code signed in to a login that is not saved. */
+.placeholder {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.placeholder.notice {
+  color: var(--vscode-foreground);
+  border-style: solid;
+  border-color: var(--vscode-inputValidation-infoBorder, var(--vscode-focusBorder));
+  background: var(--vscode-inputValidation-infoBackground, transparent);
+}
+
+.placeholder.notice .icon {
+  margin-top: 1px;
+  color: var(--vscode-editorInfo-foreground, var(--vscode-focusBorder));
+}
+
+.placeholder-body {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.placeholder-body button {
+  margin-top: 8px;
+}
+
+/* --- Add account --- */
+
+.add-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 6px 10px;
+  border: 1px dashed var(--border);
+  background: transparent;
+  color: var(--muted);
+}
+
+.add-btn:hover,
+.add-btn.open {
+  color: var(--vscode-foreground);
+  border-color: color-mix(in srgb, var(--vscode-foreground) 35%, transparent);
+  background: var(--vscode-toolbar-hoverBackground, rgba(128, 128, 128, 0.15));
+}
+
+.limit {
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--muted);
+  margin: 12px 4px 0;
+  padding: 6px 10px;
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+}
+
+.note {
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--muted);
+  margin: 12px 4px 0;
+}
+
+.count {
+  font-weight: 500;
+  letter-spacing: 0;
+  padding: 0 6px;
+  border-radius: 8px;
+  background: var(--vscode-badge-background);
+  color: var(--vscode-badge-foreground);
+}
+
+/* --- Cards --- */
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 10px 12px;
+  margin-bottom: 8px;
+  background: var(--vscode-sideBar-background, transparent);
+  transition: opacity 0.2s ease;
+}
+
+.card:hover {
+  border-color: color-mix(in srgb, var(--vscode-foreground) 25%, transparent);
+}
+
+/* --c is the account's color (set inline from ACCOUNT_COLORS); teal without one. */
+.card.active {
+  border-color: color-mix(in srgb, var(--c, var(--brand)) 60%, transparent);
+  background: color-mix(in srgb, var(--c, var(--brand)) 7%, var(--vscode-sideBar-background, transparent));
+}
+
+.card.busy .meters {
+  opacity: 0.5;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--c, var(--brand-ink));
+  background: color-mix(in srgb, var(--c, var(--brand-ink)) 18%, transparent);
+}
+
+/* A sixth account and beyond: all five colors are taken. */
+.avatar.plain {
+  color: var(--muted);
+  background: color-mix(in srgb, var(--muted) 18%, transparent);
+}
+
+.ident {
+  flex: 1;
+  min-width: 0;
+}
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.name {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plan {
+  flex: 0 0 auto;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.email {
+  min-width: 4ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.email + .ago::before {
+  content: "·";
+  margin-right: 6px;
+}
+
+.ago {
+  flex: 0 0 auto;
+}
+
+/* --- Alerts --- */
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--vscode-errorForeground);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+}
+
+.alert .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.alert-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.alert button {
+  flex: 0 0 auto;
+}
+
+/* --- Usage meters --- */
+
+.meters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  transition: opacity 0.2s ease;
+}
+
+.meter-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+.meter-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meter-reset {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.meter-pct {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  min-width: 3.2em;
+  text-align: right;
+}
+
+.meter.warn .meter-pct {
+  color: var(--warn);
+}
+
+.meter.danger .meter-pct {
+  color: var(--danger);
+}
+
+.bar {
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--vscode-foreground) 12%, transparent);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--brand);
+  transition: width 0.4s ease;
+}
+
+/* Claude Code's own account gets Claude orange; warn/danger below still win. */
+.card.active .fill {
+  background: var(--brand-2);
+}
+
+.meter.warn .fill {
+  background: var(--warn);
+}
+
+.meter.danger .fill {
+  background: var(--danger);
+}
+
+/* --- Dropdown menu --- */
+
+.menu {
+  position: absolute;
+  z-index: 10;
+  min-width: 190px;
+  max-width: calc(100vw - 12px);
+  padding: 4px;
+  border-radius: var(--radius);
+  border: 1px solid var(--vscode-menu-border, var(--border));
+  background: var(--vscode-menu-background, var(--vscode-editorWidget-background));
+  color: var(--vscode-menu-foreground, var(--vscode-foreground));
+  box-shadow: 0 4px 16px var(--vscode-widget-shadow, rgba(0, 0, 0, 0.3));
+}
+
+.menu-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 4px;
+  text-align: left;
+  white-space: normal;
+  background: transparent;
+  color: inherit;
+}
+
+.menu-item .icon {
+  margin-top: 1px;
+  opacity: 0.85;
+}
+
+.menu-item:hover,
+.menu-item:focus-visible {
+  outline: none;
+  background: var(--vscode-menu-selectionBackground, var(--vscode-list-activeSelectionBackground));
+  color: var(--vscode-menu-selectionForeground, var(--vscode-list-activeSelectionForeground));
+}
+
+.menu-item.danger:not(:hover):not(:focus-visible) {
+  color: var(--vscode-errorForeground);
+}
+
+.menu-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.menu-detail {
+  font-size: 11px;
+  line-height: 1.35;
+  opacity: 0.7;
+}
+
+.menu-sep {
+  height: 1px;
+  margin: 4px 6px;
+  background: var(--vscode-menu-separatorBackground, var(--border));
+}
+
+.menu-header {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.6;
+  padding: 4px 8px 2px;
+}
+
+code {
+  font-family: var(--vscode-editor-font-family);
+  font-size: 0.95em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

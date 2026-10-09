@@ -1,0 +1,2633 @@
+:root {
+  color-scheme: light dark;
+  --fg: var(--vscode-foreground);
+  /* Claude Code paints its chat with the sidebar color, also in an editor tab. */
+  --bg: var(--vscode-sideBar-background, var(--vscode-editor-background));
+  --muted: var(--vscode-descriptionForeground);
+  --border: var(--vscode-widget-border, var(--vscode-panel-border, rgba(128, 128, 128, 0.25)));
+  --surface: var(--vscode-editorWidget-background, rgba(128, 128, 128, 0.08));
+  --surface-2: var(--vscode-sideBar-background, rgba(128, 128, 128, 0.05));
+  --hover: var(--vscode-list-hoverBackground, rgba(128, 128, 128, 0.12));
+  --active: var(--vscode-list-activeSelectionBackground, rgba(128, 128, 128, 0.2));
+  --active-fg: var(--vscode-list-activeSelectionForeground, inherit);
+  --code-bg: var(--vscode-textCodeBlock-background, rgba(128, 128, 128, 0.12));
+  --focus: var(--vscode-focusBorder);
+  /* Brand: teal first, Claude orange second, as in media/icon.png. Teal is for actions and
+     selection; orange marks what is live or waiting on you. The -ink shades are for text. */
+  --accent: #2b8a92;
+  --accent-ink: #4fb7bf;
+  --accent-soft: rgba(43, 138, 146, 0.16);
+  --accent-line: rgba(43, 138, 146, 0.4);
+  --accent-fg: #ffffff;
+  --live: #d97757;
+  --live-ink: #e8906f;
+  --live-soft: rgba(217, 119, 87, 0.14);
+  --divider: rgba(128, 128, 128, 0.16);
+  --pill-bg: rgba(128, 128, 128, 0.14);
+  --pill-hover: rgba(128, 128, 128, 0.24);
+  --ok: var(--vscode-charts-green, #2ea043);
+  --warn: var(--vscode-charts-yellow, #d7a824);
+  --danger: var(--vscode-charts-red, #e5534b);
+  --add-bg: var(--vscode-diffEditor-insertedLineBackground, rgba(46, 160, 67, 0.15));
+  --del-bg: var(--vscode-diffEditor-removedLineBackground, rgba(229, 83, 75, 0.15));
+  --mono: var(--vscode-editor-font-family, ui-monospace, monospace);
+  --radius: 8px;
+  --radius-sm: 5px;
+  --col: 860px;
+}
+
+body.vscode-light {
+  --accent-ink: #1f6e75;
+  --accent-soft: rgba(43, 138, 146, 0.12);
+  --live-ink: #b4553a;
+}
+
+body.vscode-high-contrast {
+  --accent-ink: #5fd0d8;
+  --live-ink: #f0a083;
+}
+
+body.vscode-high-contrast-light {
+  --accent-ink: #145a60;
+  --live-ink: #9a4329;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  line-height: 1.5;
+  color: var(--fg);
+  background: var(--bg);
+  overflow: hidden;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+:focus-visible {
+  outline: 1px solid var(--focus);
+  outline-offset: 1px;
+}
+
+/* Claude Code's scrollbars: it draws none of its own. It sets the standard
+   `scrollbar-color` and lets Chromium paint its native bar (on Windows 11 the thin,
+   rounded Fluent one) in the theme's slider color over the chat background. Any
+   ::-webkit-scrollbar rule would be ignored while this is set, so there are none. */
+:root {
+  scrollbar-color: var(--vscode-scrollbarSlider-background) var(--bg);
+}
+
+svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: 0 0 auto;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+kbd {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  padding: 0 5px;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--surface);
+}
+
+/* ------------------------------------------------------------ buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--vscode-button-secondaryBackground, transparent);
+  color: var(--vscode-button-secondaryForeground, inherit);
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--vscode-button-secondaryHoverBackground, var(--hover));
+}
+
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+.btn.primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+  background: var(--accent);
+}
+
+.btn.ghost {
+  background: transparent;
+}
+
+.link {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--vscode-textLink-foreground);
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+}
+
+.mini:hover {
+  background: var(--hover);
+  color: var(--fg);
+}
+
+.mini.done {
+  color: var(--ok);
+}
+
+/* ------------------------------------------------------------ top bar */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  /* Claude Code's header height, so their header lines meet side by side. */
+  height: 42px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  flex: 0 0 auto;
+}
+
+.who {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 700;
+  font-size: 13px;
+  flex: 0 0 auto;
+}
+
+.who-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.who-name {
+  font-weight: 600;
+}
+
+.who-sub {
+  color: var(--muted);
+  font-size: 11.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.tb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: transparent;
+}
+
+.tb-btn.icon {
+  width: 26px;
+  padding: 0;
+  justify-content: center;
+}
+
+.tb-btn:hover,
+.tb-btn[aria-pressed="true"] {
+  background: var(--hover);
+}
+
+.tb-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+}
+
+.tb-btn.primary:hover {
+  filter: brightness(1.08);
+}
+
+@media (max-width: 520px) {
+  .tb-btn span {
+    display: none;
+  }
+  .tb-btn {
+    width: 26px;
+    padding: 0;
+    justify-content: center;
+  }
+}
+
+/* ------------------------------------------------------------ layout */
+
+.body {
+  flex: 1 1 auto;
+  display: flex;
+  min-height: 0;
+  position: relative;
+}
+
+.log-wrap {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+
+#log {
+  flex: 1 1 auto;
+  position: relative;
+  overflow-y: auto;
+  /* Always reserve the scrollbar's lane, so the floating composer lines up with the
+     messages whether or not the log overflows. */
+  scrollbar-gutter: stable;
+  padding: 18px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#log > * {
+  width: 100%;
+  max-width: var(--col);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ------------------------------------------------------------ pinned prompt */
+
+.pinned {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: var(--gutter, 0px);
+  z-index: 4;
+  display: block;
+  padding: 6px 16px 10px;
+  border: none;
+  background: linear-gradient(var(--bg) 70%, transparent);
+  text-align: left;
+  color: inherit;
+}
+
+.pinned-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: var(--col);
+  margin: 0 auto;
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--accent-line);
+  background: linear-gradient(var(--accent-soft), var(--accent-soft)), var(--bg);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.pinned:hover .pinned-inner {
+  border-color: var(--accent);
+}
+
+.pinned-images {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.pinned-images img {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.pinned-more {
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.pinned-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ------------------------------------------------------------ welcome */
+
+.welcome {
+  margin: auto;
+  text-align: center;
+  padding: 24px 0 40px;
+}
+
+.welcome-mark {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 14px;
+}
+
+.welcome-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.welcome h1 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+
+.welcome p {
+  margin: 0 0 18px;
+  word-break: break-word;
+}
+
+.welcome-tips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ------------------------------------------------------------ messages */
+
+.msg {
+  position: relative;
+}
+
+.msg-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 22px;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+
+.msg:hover .msg-actions,
+.text-block:hover .msg-actions,
+.msg-actions:focus-within {
+  opacity: 1;
+}
+
+.msg.user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.bubble {
+  max-width: min(85%, 680px);
+  padding: 8px 12px;
+  border-radius: 14px 14px 4px 14px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
+}
+
+.bubble-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.bubble-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.bubble-images img {
+  max-width: 160px;
+  max-height: 120px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.msg.user .msg-actions {
+  justify-content: flex-end;
+}
+
+.msg-time {
+  margin-right: 2px;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.msg-actions:has(.rewind[aria-expanded="true"]) {
+  opacity: 1;
+}
+
+.msg.assistant {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 20px;
+}
+
+/*
+ * A timeline: one line per turn (everything between two prompts) with a status dot on
+ * each reply and action. chat.js sizes the line to run from the first dot to the last.
+ */
+.turn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.turn-line {
+  position: absolute;
+  left: 4px;
+  width: 1px;
+  background: var(--border);
+  pointer-events: none;
+}
+
+/* Cards and notices inside a turn keep clear of the line. */
+.turn:has(.msg.assistant) > .permission,
+.turn:has(.msg.assistant) > .notice {
+  margin-left: 20px;
+}
+
+.dot {
+  position: absolute;
+  left: 1px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--fg);
+  opacity: 0.75;
+  box-shadow: 0 0 0 3px var(--bg);
+}
+
+.text-block > .dot {
+  margin-top: 7px;
+}
+
+.msg.assistant.error .text-block > .dot {
+  background: var(--danger);
+  opacity: 1;
+}
+
+.thinking .dot {
+  background: var(--muted);
+  opacity: 0.6;
+}
+
+.tool .dot {
+  background: var(--ok);
+  opacity: 1;
+}
+
+.tool.running .dot {
+  background: var(--live);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.tool.failed .dot {
+  background: var(--danger);
+}
+
+.tool.stopped .dot {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--muted), 0 0 0 3px var(--bg);
+}
+
+.text-block .msg-actions {
+  margin-top: -4px;
+}
+
+.turn-meta {
+  color: var(--muted);
+  font-size: 11.5px;
+  text-align: right;
+  margin-top: -6px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-top: 1px solid var(--border);
+}
+
+.notice {
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.notice.error {
+  border-color: var(--danger);
+  background: var(--vscode-inputValidation-errorBackground, rgba(229, 83, 75, 0.1));
+}
+
+.notice.info {
+  border-left: 3px solid var(--accent);
+}
+
+.notice.interrupted {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ------------------------------------------------------------ markdown */
+
+.md {
+  word-break: break-word;
+}
+
+.md > :first-child {
+  margin-top: 0;
+}
+
+.md > :last-child {
+  margin-bottom: 0;
+}
+
+.md p,
+.md ul,
+.md ol,
+.md blockquote {
+  margin: 0 0 10px;
+}
+
+.md h2,
+.md h3,
+.md h4,
+.md h5,
+.md h6 {
+  margin: 14px 0 6px;
+  line-height: 1.3;
+}
+
+.md h2 {
+  font-size: 1.3em;
+}
+
+.md h3 {
+  font-size: 1.15em;
+}
+
+.md ul,
+.md ol {
+  padding-left: 22px;
+}
+
+.md li {
+  margin: 2px 0;
+}
+
+.md li.task {
+  list-style: none;
+  margin-left: -18px;
+}
+
+.md li.task::before {
+  content: "☐ ";
+  color: var(--muted);
+}
+
+.md li.task.done::before {
+  content: "☑ ";
+  color: var(--ok);
+}
+
+.md blockquote {
+  padding: 2px 12px;
+  border-left: 3px solid var(--border);
+  color: var(--muted);
+}
+
+.md hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 14px 0;
+}
+
+.md a {
+  color: var(--vscode-textLink-foreground);
+}
+
+.md code,
+.tool-detail code {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--code-bg);
+}
+
+.md code.path,
+[data-path].clickable {
+  cursor: pointer;
+  color: var(--vscode-textLink-foreground);
+}
+
+.md code.path:hover,
+[data-path].clickable:hover {
+  text-decoration: underline;
+}
+
+.code {
+  margin: 0 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--code-bg);
+}
+
+.code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 4px 2px 12px;
+  font-size: 11.5px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.code pre {
+  margin: 0;
+  padding: 10px 12px;
+  overflow-x: auto;
+}
+
+.code pre code {
+  padding: 0;
+  background: none;
+  font-size: var(--vscode-editor-font-size, 12.5px);
+}
+
+.table {
+  overflow-x: auto;
+  margin: 0 0 10px;
+}
+
+.md table {
+  border-collapse: collapse;
+  min-width: 50%;
+}
+
+.md th,
+.md td {
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.md th {
+  background: var(--surface);
+}
+
+/* ------------------------------------------------------------ thinking */
+
+.thinking {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.thinking.live .thinking-label {
+  color: var(--accent-ink);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.thinking.live .dot {
+  background: var(--accent);
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------ working indicator */
+
+.working {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--accent-ink);
+}
+
+.working-glyph {
+  display: inline-block;
+  animation: spin 2.4s linear infinite;
+}
+
+.working-verb {
+  font-weight: 600;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.working-meta {
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+/* ------------------------------------------------------------ tool cards */
+
+.tool-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 22px;
+  min-width: 0;
+}
+
+.tool-glyph {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+.tool-name {
+  font-weight: 600;
+  flex: 0 0 auto;
+}
+
+.tool-sum {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.tool-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.tool-body:empty {
+  display: none;
+}
+
+.tool-detail pre,
+.tool-result {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 320px;
+  overflow: auto;
+}
+
+/* IN / OUT box: collapsed to one line of input and three of output; a click expands both. */
+.io {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 18px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.io:hover .io-label {
+  color: var(--fg);
+}
+
+.io-row {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 8px;
+  padding: 6px 10px;
+}
+
+.io-row + .io-row {
+  border-top: 1px solid var(--border);
+}
+
+.io-row.hidden + .io-row {
+  border-top: none;
+}
+
+.io-label {
+  color: var(--muted);
+  font-family: var(--vscode-font-family);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+
+.io-content {
+  margin: 0;
+  font: inherit;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.io-row.in .io-content {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.io-row.out .io-content {
+  white-space: pre;
+  max-height: calc(18px * 3);
+}
+
+.io-row.out.more .io-content {
+  -webkit-mask-image: linear-gradient(to bottom, #000 40%, transparent);
+  mask-image: linear-gradient(to bottom, #000 40%, transparent);
+}
+
+.io-row.pending .io-content {
+  color: var(--muted);
+  font-family: var(--vscode-font-family);
+  font-style: italic;
+}
+
+.io-row.err .io-content {
+  color: var(--danger);
+}
+
+.io.expanded .io-row .io-content {
+  white-space: pre-wrap;
+  word-break: break-word;
+  text-overflow: clip;
+  max-height: 320px;
+  overflow: auto;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.cmd .prompt-sign {
+  color: var(--accent-ink);
+  user-select: none;
+}
+
+.tool-result.err {
+  color: var(--danger);
+}
+
+/* ------------------------------------------------------------ diffs */
+
+.diff {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.diff-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.diff-file {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: var(--mono);
+  color: var(--vscode-textLink-foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.diff-file:hover {
+  text-decoration: underline;
+}
+
+.diff-counts {
+  display: flex;
+  gap: 6px;
+  font-family: var(--mono);
+  margin-right: auto;
+}
+
+.plus {
+  color: var(--ok);
+}
+
+.minus {
+  color: var(--danger);
+}
+
+.tool-detail pre.diff-body {
+  border-radius: 0;
+  padding: 4px 0;
+  white-space: pre;
+  overflow-x: auto;
+  max-height: none;
+}
+
+.dl {
+  display: flex;
+  padding: 0 10px 0 0;
+  min-width: max-content;
+}
+
+.dl .sign {
+  width: 22px;
+  text-align: center;
+  color: var(--muted);
+  user-select: none;
+  flex: 0 0 auto;
+}
+
+.dl.add {
+  background: var(--add-bg);
+}
+
+.dl.add .sign {
+  color: var(--ok);
+}
+
+.dl.del {
+  background: var(--del-bg);
+}
+
+.dl.del .sign {
+  color: var(--danger);
+}
+
+.dl.sep {
+  color: var(--muted);
+}
+
+.diff-more {
+  display: block;
+  width: 100%;
+  border: none;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--vscode-textLink-foreground);
+  padding: 4px;
+  font-size: 12px;
+}
+
+.diff-more:hover {
+  background: var(--hover);
+}
+
+/* ------------------------------------------------------------ permission */
+
+.permission {
+  border: 1px solid var(--live);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 0 0 3px var(--live-soft);
+}
+
+.permission.answered {
+  border-color: var(--border);
+  box-shadow: none;
+  opacity: 0.8;
+}
+
+.perm-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.perm-title .muted {
+  font-family: var(--mono);
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.perm-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--live);
+  color: var(--accent-fg);
+}
+
+.perm-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.plan {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+/* ------------------------------------------------------------ questions */
+
+/* The question panel takes the composer's place while Claude waits on an answer. */
+.ask {
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh;
+  border: 1px solid var(--vscode-input-border, var(--border));
+  border-radius: 10px;
+  background: var(--vscode-input-background);
+  transition: border-color 0.12s;
+}
+
+.ask:focus-within {
+  border-color: var(--accent);
+}
+
+.ask-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 6px 0 8px;
+  flex: 0 0 auto;
+}
+
+.ask.collapsed .ask-head {
+  padding-bottom: 6px;
+}
+
+.ask-tabs {
+  display: flex;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ask-tab {
+  flex: 0 0 auto;
+  max-width: 180px;
+  padding: 3px 6px 4px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ask-tab.answered {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.ask-tab.active {
+  font-weight: 400;
+  color: var(--fg);
+  border-bottom-color: var(--accent);
+}
+
+.ask-tab:hover {
+  color: var(--fg);
+}
+
+.ask-tools {
+  display: flex;
+  gap: 2px;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.ask-collapse svg {
+  transition: transform 0.12s;
+}
+
+.ask.collapsed .ask-collapse svg {
+  transform: rotate(180deg);
+}
+
+.ask-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  padding: 10px 12px;
+  overflow-y: auto;
+}
+
+.ask-question {
+  font-weight: 600;
+}
+
+.ask-main.with-preview {
+  display: grid;
+  grid-template-columns: minmax(180px, 2fr) minmax(0, 3fr);
+  gap: 12px;
+  align-items: stretch;
+}
+
+.ask-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.ask-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.ask-opt:hover {
+  background: var(--hover);
+}
+
+.ask-opt:focus-visible {
+  outline: none;
+  border-color: var(--focus);
+}
+
+/* With a preview, the picked option is highlighted like the row it previews. */
+.with-preview .ask-opt.on {
+  background: var(--hover);
+  border-color: var(--border);
+}
+
+/* A radio circle, or a checkbox square with .check; shared with the timeline card. */
+.ask-mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  border: 1.5px solid var(--muted);
+  border-radius: 50%;
+}
+
+.ask-mark.check {
+  border-radius: 4px;
+}
+
+.ask-mark.on {
+  border-color: var(--accent);
+}
+
+.ask-mark.on:not(.check)::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.ask-mark.check.on {
+  background: var(--accent);
+}
+
+.ask-mark.check.on::after {
+  content: "";
+  width: 8px;
+  height: 4px;
+  border: solid var(--accent-fg);
+  border-width: 0 0 1.6px 1.6px;
+  transform: translateY(-1px) rotate(-45deg);
+}
+
+.ask-opt-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.ask-opt-label {
+  font-weight: 600;
+}
+
+.ask-opt-desc {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.ask-other {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.ask-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  min-height: 140px;
+  max-height: 340px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--code-bg);
+  overflow: auto;
+}
+
+.ask-preview-title {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.ask-preview-body {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Previews are often ASCII mockups: keep their spacing and lines. */
+.ask-preview-body p {
+  margin: 0 0 6px;
+  white-space: pre;
+}
+
+.ask-preview-body .code {
+  margin: 0;
+  border: none;
+  background: none;
+}
+
+.ask-preview-body .code-head {
+  display: none;
+}
+
+.ask-preview-body pre {
+  margin: 0;
+  padding: 0;
+  background: none;
+}
+
+.ask-submit {
+  justify-content: flex-start;
+  width: 100%;
+  padding: 6px 10px;
+  font-weight: 600;
+}
+
+.ask-submit:disabled {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--muted);
+}
+
+.ask-foot {
+  margin-top: -4px;
+  color: var(--muted);
+  font-size: 11.5px;
+}
+
+.ask-foot kbd {
+  font-size: 10.5px;
+}
+
+@media (max-width: 560px) {
+  .ask-main.with-preview {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The "Questions" step on the timeline: what was asked and what was picked. */
+.ask-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.ask-card-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  border: none;
+  background: none;
+  text-align: left;
+}
+
+.ask-card-head .dot {
+  margin-top: 7px;
+}
+
+.ask-card-title {
+  font-weight: 600;
+}
+
+.ask-card-sub {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.ask-card-head:hover .ask-card-sub {
+  color: var(--fg);
+}
+
+.ask-card-chev {
+  width: 11px;
+  height: 11px;
+  transition: transform 0.12s;
+}
+
+.ask-card.open .ask-card-chev {
+  transform: rotate(180deg);
+}
+
+.ask-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-self: stretch;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.ask-card-question {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.ask-card-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 4px;
+}
+
+.ask-card-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* Once answered, what was not picked fades back. */
+.ask-card-body.settled .ask-card-opt:not(.chosen) {
+  opacity: 0.5;
+}
+
+.ask-card-note {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* ------------------------------------------------------------ drawer */
+
+.drawer {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--border);
+  background: var(--surface-2);
+  min-height: 0;
+}
+
+@media (max-width: 760px) {
+  .drawer {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: min(340px, 100%);
+    z-index: 5;
+    box-shadow: -8px 0 24px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px 8px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.drawer-head h2 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.drawer-pane {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field {
+  width: 100%;
+  padding: 5px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--vscode-input-border, var(--border));
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  font: inherit;
+}
+
+.field:focus {
+  outline: 1px solid var(--focus);
+  outline-offset: -1px;
+}
+
+.history-list,
+.plain-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pad {
+  padding: 8px 4px;
+}
+
+.history-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  width: 100%;
+  padding: 7px 8px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  text-align: left;
+}
+
+.history-item:hover {
+  background: var(--hover);
+}
+
+.history-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.history-time {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.setting-group:last-child {
+  border-bottom: none;
+}
+
+.setting-group h3 {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.setting-group p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.group-head .link {
+  font-size: 12px;
+}
+
+.mcp-row,
+.rule-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 5px 2px;
+  font-size: 12px;
+}
+
+.rule-row {
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.rule-row code {
+  font-family: var(--mono);
+  word-break: break-all;
+}
+
+.mcp-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-right: auto;
+}
+
+.mcp-name {
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.err-text {
+  color: var(--danger);
+  word-break: break-word;
+}
+
+.chip {
+  font-size: 10.5px;
+  padding: 0 6px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.chip.connected,
+.chip.allow {
+  color: var(--ok);
+  border-color: var(--ok);
+}
+
+.chip.failed,
+.chip.deny {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.chip.pending,
+.chip.needs-auth,
+.chip.ask {
+  color: var(--warn);
+  border-color: var(--warn);
+}
+
+/* ------------------------------------------------------------ banners */
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 16px 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--warn);
+  background: var(--vscode-inputValidation-warningBackground, rgba(215, 168, 36, 0.12));
+  flex: 0 0 auto;
+}
+
+.banner.warn {
+  margin: 8px 16px 0;
+}
+
+.banner.info {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.banner-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.banner pre {
+  margin: 6px 0 0;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  white-space: pre-wrap;
+  max-height: 120px;
+  overflow: auto;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ composer */
+
+/* Like Claude Code, the composer floats over the bottom of the log with no backdrop of
+   its own. A separate fade sits under it, across the full width and over the scrollbar:
+   it only turns solid at the very bottom edge, so messages stay faintly visible as they
+   scroll under the composer. It is Claude Code's 150px, or the composer's height
+   (--composer-h, set by chat.js) when that is taller. */
+.log-wrap::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  height: max(150px, var(--composer-h, 0px));
+  background: linear-gradient(transparent, var(--bg));
+  pointer-events: none;
+}
+
+/* The right padding adds the scrollbar's lane (--gutter, measured by chat.js) so the
+   composer stays aligned with the messages. chat.js pads the log by the composer's
+   height so the last message can clear it. */
+.composer-wrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  padding: 24px calc(16px + var(--gutter, 0px)) 6px 16px;
+  pointer-events: none;
+}
+
+.composer-wrap > * {
+  pointer-events: auto;
+}
+
+.composer-wrap > * {
+  max-width: var(--col);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.yolo {
+  margin-bottom: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--vscode-inputValidation-errorBackground, rgba(229, 83, 75, 0.12));
+  border: 1px solid var(--danger);
+  font-size: 12px;
+}
+
+.composer {
+  position: relative;
+  border: 1px solid var(--vscode-input-border, var(--border));
+  border-radius: 10px;
+  background: var(--vscode-input-background);
+  transition: border-color 0.12s;
+}
+
+.composer:focus-within {
+  border-color: var(--accent);
+}
+
+.composer.dragging {
+  border-style: dashed;
+  border-color: var(--accent);
+}
+
+#input {
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  max-height: 260px;
+  padding: 10px 12px;
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  color: var(--vscode-input-foreground);
+  font: inherit;
+  line-height: 1.5;
+}
+
+#input::placeholder {
+  color: var(--vscode-input-placeholderForeground, var(--muted));
+}
+
+.attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--divider);
+}
+
+.att-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  max-width: 260px;
+  padding: 0 4px 0 3px;
+  border-radius: 6px;
+  background: var(--pill-bg);
+  font-size: 12px;
+  min-width: 0;
+}
+
+.att-chip img {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex: 0 0 auto;
+}
+
+.att-name {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.att-size {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  flex: 0 0 auto;
+}
+
+.att-x {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1;
+  flex: 0 0 auto;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+
+.att-chip:hover .att-x,
+.att-chip:focus-within .att-x {
+  opacity: 1;
+}
+
+.att-x:hover {
+  background: var(--pill-hover);
+  color: var(--fg);
+}
+
+.composer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 6px 6px 8px;
+  border-top: 1px solid var(--divider);
+}
+
+.bar-left,
+.bar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.bar-left {
+  flex: 1 1 auto;
+}
+
+.bar-left > *,
+.bar-right {
+  flex: 0 0 auto;
+}
+
+/* On a narrow tab the model name gives way first. */
+.bar-left > .model-pill {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: none;
+  background: var(--pill-bg);
+  color: var(--fg);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+button.pill:hover {
+  background: var(--pill-hover);
+}
+
+.pill.static {
+  cursor: default;
+}
+
+.pill svg {
+  width: 12px;
+  height: 12px;
+}
+
+.pill .chev {
+  width: 8px;
+  height: 8px;
+  stroke-width: 1.6;
+  color: var(--muted);
+}
+
+.model-name {
+  min-width: 3ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.effort-label {
+  color: var(--muted);
+}
+
+.usage-chip {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.usage-chip.warn {
+  color: var(--warn);
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+.icon-btn.boxed {
+  border-color: var(--border);
+}
+
+.icon-btn:hover,
+.icon-btn[aria-expanded="true"] {
+  background: var(--hover);
+  color: var(--fg);
+}
+
+.mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 6px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.mode-btn:hover,
+.mode-btn[aria-expanded="true"] {
+  background: var(--hover);
+  color: var(--fg);
+}
+
+.mode-icon {
+  display: inline-flex;
+}
+
+.mode-icon svg {
+  width: 13px;
+  height: 13px;
+}
+
+#modeBtn[data-mode="acceptEdits"] .mode-icon {
+  color: var(--ok);
+}
+
+#modeBtn[data-mode="plan"] .mode-icon {
+  color: #6f8ff7;
+}
+
+#modeBtn[data-mode="auto"] .mode-icon {
+  color: var(--warn);
+}
+
+#modeBtn[data-mode="plan"],
+#modeBtn[data-mode="acceptEdits"],
+#modeBtn[data-mode="auto"] {
+  color: var(--fg);
+}
+
+#modeBtn[data-mode="bypassPermissions"] {
+  color: var(--danger);
+}
+
+.send {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+.send svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.8;
+}
+
+.send:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.send:disabled {
+  opacity: 0.4;
+}
+
+.send.stop {
+  background: var(--danger);
+}
+
+.send.stop svg {
+  fill: currentColor;
+}
+
+@media (max-width: 440px) {
+  .mode-label,
+  .effort-label {
+    display: none;
+  }
+}
+
+@media (max-width: 340px) {
+  .usage-chip {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------ popup & menu */
+
+.popup {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: calc(100% + 6px);
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 4px;
+  border: 1px solid var(--vscode-editorSuggestWidget-border, var(--border));
+  border-radius: var(--radius);
+  background: var(--vscode-editorSuggestWidget-background, var(--surface));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  z-index: 10;
+}
+
+.popup-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  min-width: 0;
+}
+
+.popup-item.active {
+  background: var(--active);
+  color: var(--active-fg);
+}
+
+.popup-label {
+  font-family: var(--mono);
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.popup-desc {
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.popup-item.active .popup-desc {
+  color: inherit;
+  opacity: 0.8;
+}
+
+.popup-empty {
+  padding: 6px 8px;
+  color: var(--muted);
+}
+
+.menu {
+  position: fixed;
+  min-width: 220px;
+  max-width: min(340px, calc(100vw - 16px));
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 4px;
+  border: 1px solid var(--vscode-menu-border, var(--border));
+  border-radius: var(--radius);
+  background: var(--vscode-menu-background, var(--surface));
+  color: var(--vscode-menu-foreground, inherit);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  z-index: 20;
+}
+
+.menu-title {
+  padding: 4px 8px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px 6px 26px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  text-align: left;
+  position: relative;
+}
+
+.menu-item:hover,
+.menu-item:focus-visible {
+  background: var(--vscode-menu-selectionBackground, var(--active));
+  color: var(--vscode-menu-selectionForeground, inherit);
+  outline: none;
+}
+
+.menu.actions .menu-item {
+  padding: 8px 10px;
+}
+
+.menu-item[disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.menu-item[disabled]:hover {
+  background: transparent;
+  color: inherit;
+}
+
+.menu-item.checked::before {
+  content: "✓";
+  position: absolute;
+  left: 9px;
+  color: var(--accent-ink);
+}
+
+.menu-item.danger .menu-label {
+  color: var(--danger);
+}
+
+.menu-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.menu-desc {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* mode picker */
+
+.menu.mode-menu {
+  width: 300px;
+  max-width: calc(100vw - 16px);
+  padding: 6px;
+}
+
+.mode-menu-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 6px 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.mode-menu-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.mode-menu-hint kbd {
+  border-bottom-width: 1px;
+  line-height: 1.5;
+}
+
+.menu.mode-menu .mode-item {
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  margin-bottom: 2px;
+}
+
+.menu.mode-menu .mode-item.checked {
+  background: var(--active);
+  color: var(--active-fg);
+}
+
+.menu.mode-menu .mode-item.checked::before {
+  content: none;
+}
+
+.mode-item .menu-label {
+  font-weight: 600;
+}
+
+.mode-item .menu-desc {
+  line-height: 1.35;
+  margin-top: 1px;
+}
+
+.mode-item.checked .menu-desc {
+  color: inherit;
+  opacity: 0.85;
+}
+
+.mode-item-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  padding-top: 1px;
+}
+
+.mode-item-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.mode-item .mode-item-check {
+  flex: 0 0 auto;
+  margin-left: auto;
+  align-self: center;
+  width: 14px;
+  height: 14px;
+}
+
+.mode-item .menu-text {
+  flex: 1 1 auto;
+}
+
+.effort-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 10px 10px 6px;
+  border-top: 1px solid var(--border);
+}
+
+.effort-row-label {
+  flex: 1 1 auto;
+  white-space: nowrap;
+}
+
+.effort-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 96px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 11px;
+  background: var(--pill-bg, var(--hover));
+}
+
+.effort-track:focus-visible {
+  outline: 1px solid var(--vscode-focusBorder, var(--accent));
+}
+
+.effort-dot {
+  display: grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.effort-dot::after {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: width 0.12s, height 0.12s;
+}
+
+.effort-dot:hover::after {
+  background: var(--fg);
+}
+
+.effort-dot.on::after {
+  width: 12px;
+  height: 12px;
+  background: var(--fg);
+}
+
+/* ------------------------------------------------------------ image viewer */
+
+.bubble-images img,
+.att-chip {
+  cursor: zoom-in;
+}
+
+.att-x {
+  cursor: pointer;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 24px 24px;
+  background: rgba(0, 0, 0, 0.75);
+  cursor: zoom-out;
+}
+
+.lightbox img {
+  max-width: 100%;
+  max-height: calc(100% - 30px);
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  cursor: default;
+}
+
+.lightbox-name {
+  color: #ddd;
+  font-size: 12px;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+/* ------------------------------------------------------------ plan usage */
+
+/* Sits in the status line, after the context meter. */
+.usage {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  min-width: 0;
+}
+
+.usage-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.usage-label {
+  white-space: nowrap;
+}
+
+.usage-bar {
+  width: 72px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border);
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.usage-fill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+  transition: width 0.3s;
+}
+
+.usage-item.warn .usage-fill {
+  background: var(--warn);
+}
+
+.usage-item.danger .usage-fill {
+  background: var(--danger);
+}
+
+.usage-pct {
+  font-family: var(--mono);
+  color: var(--fg);
+}
+
+.usage-item.danger .usage-pct {
+  color: var(--danger);
+}
+
+.usage-reset {
+  white-space: nowrap;
+}
+
+.usage-error {
+  color: var(--warn);
+}
+
+.usage-refresh {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-left: auto;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+}
+
+.usage-refresh:hover {
+  background: var(--hover);
+  color: var(--fg);
+}
+
+.usage-refresh svg {
+  width: 12px;
+  height: 12px;
+}
+
+.usage-refresh.spinning svg {
+  animation: spin 0.8s linear infinite;
+}
+
+@media (max-width: 560px) {
+  .usage-reset {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------ status line */
+
+.statusline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 5px 4px 0;
+  font-size: 11.5px;
+  color: var(--muted);
+  min-width: 0;
+}
+
+.statusline .spacer {
+  flex: 1;
+}
+
+/* Nothing to show yet (no context reading, tokens or cost): no empty row. */
+.statusline:not(:has(> :not(.hidden, .spacer))) {
+  display: none;
+}
+
+.stat {
+  font-family: var(--mono);
+  white-space: nowrap;
+}
+
+.meter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+#ctxText {
+  font-family: var(--mono);
+}
+
+.meter-bar {
+  width: 48px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+.meter-bar span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+}
+
+.meter.high .meter-bar span {
+  background: var(--danger);
+}
+
+@media (max-width: 480px) {
+  #tokens,
+  #cost {
+    display: none;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tool.running .dot,
+  .thinking.live .thinking-label,
+  .working-glyph,
+  .working-verb {
+    animation: none;
+  }
+}
